@@ -1,13 +1,5 @@
-6
-frodo
-front
-frost
-frozen
-frame
-kakao
-5
-fro??
-????o
-fr???
-fro???
-pro?
+0 0 0 1 1
+0 0 0 1 0
+0 1 0 1 1
+1 1 0 0 1
+0 0 0 0 0
