@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public class GPS {
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
 
@@ -32,31 +32,66 @@ public class Main {
 }
 
 class Solution {
-  public void makeEdgeMap(int[][] edge_list,
-                          Map<Integer, HashSet<Integer>> edgeMap) {
+
+  public void initializeDP(int[][] dp, int inf) {
+    for (int r = 0; r < dp.length; r++) {
+      Arrays.fill(dp[r], inf);
+    }
+  }
+
+  public void initializeEdgeMap(int[][] edge_list,
+                                Map<Integer, ArrayList<Integer>> edgeMap) {
     for (int i = 0; i < edge_list.length; i++) {
       int v1 = edge_list[i][0];
       int v2 = edge_list[i][1];
 
       if (edgeMap.get(v1) == null)
-        edgeMap.put(v1, new HashSet<Integer>());
+        edgeMap.put(v1, new ArrayList<Integer>());
       if (edgeMap.get(v2) == null)
-        edgeMap.put(v2, new HashSet<Integer>());
+        edgeMap.put(v2, new ArrayList<Integer>());
 
       edgeMap.get(v1).add(v2);
       edgeMap.get(v2).add(v1);
     }
   }
   public int solution(int n, int m, int[][] edge_list, int k, int[] gps_log) {
-    int limit = k - 2;
-    boolean found = false;
-    int answer = 0;
+    final int INF = 100000;
+    int Min = INF;
 
-    Map<Integer, HashSet<Integer>> edgeMap =
-        new Hashtable<Integer, HashSet<Integer>>();
-    makeEdgeMap(edge_list, edgeMap);
+    Map<Integer, ArrayList<Integer>> edgeMap =
+        new Hashtable<Integer, ArrayList<Integer>>();
+    initializeEdgeMap(edge_list, edgeMap);
 
-    System.out.println("Map: " + edgeMap);
-    return 1;
+    int[][] dp = new int[k][n + 1];
+    initializeDP(dp, INF);
+
+    int start = gps_log[0];
+    int end = gps_log[k - 1];
+    dp[0][start] = 0;
+
+    for (int index = 0; index < k - 1; index++) {
+
+      for (int node = 1; node < n + 1; node++) {
+        if (dp[index][node] == INF)
+          continue;
+
+        ArrayList<Integer> nextCandidates = new ArrayList<>(edgeMap.get(node));
+        nextCandidates.add(node);
+
+        for (int nextNode : nextCandidates) {
+          int value = dp[index][node];
+
+          if (nextNode != gps_log[index + 1])
+            value++;
+
+          dp[index + 1][nextNode] = Math.min(dp[index + 1][nextNode], value);
+        }
+      }
+    }
+    return ((dp[k - 1][end] != INF) ? dp[k - 1][end] : -1);
   }
+}
+
+Interface test {
+  public static int test { return 0; }
 }
