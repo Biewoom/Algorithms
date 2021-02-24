@@ -91,7 +91,3 @@ class Solution {
     return ((dp[k - 1][end] != INF) ? dp[k - 1][end] : -1);
   }
 }
-
-Interface test {
-  public static int test { return 0; }
-}
